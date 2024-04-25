@@ -29,7 +29,7 @@ class CustomTrendingEvent extends StatelessWidget {
 
     return SizedBox(
       width: w(context, 160),
-      height: h(context, 130),
+      height: h(context, 180),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -39,7 +39,7 @@ class CustomTrendingEvent extends StatelessWidget {
             },
             child: Container(
               width: w(context, 160),
-              height: h(context, 120),
+              height: h(context, 180),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(h(context, 10)),
                 image: DecorationImage(

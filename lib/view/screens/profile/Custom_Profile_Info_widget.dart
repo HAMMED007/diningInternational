@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../constants/app_colors.dart';
@@ -9,18 +11,20 @@ class CustomProfileInfo extends StatelessWidget {
   final String profileImage;
   final String username;
   final String description;
+  final String location;
 
   const CustomProfileInfo({
     Key? key,
     required this.profileImage,
     required this.username,
     required this.description,
+    required this.location,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Stack(
           children: [
@@ -78,12 +82,29 @@ class CustomProfileInfo extends StatelessWidget {
                   ),
                 ],
               ),
+              SizedBox(
+                height: h(context, 2),
+              ),
               CustomText(
                 text: description,
                 size: f(context, 12),
-                paddingTop: 5,
                 color: const Color(0xff1B1B1B),
                 weight: FontWeight.w400,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomText(
+                    text: "Based in ",
+                    size: 13,
+                    weight: FontWeight.w500,
+                  ),
+                  CustomText(
+                    text: location,
+                    size: 13,
+                    weight: FontWeight.w400,
+                  ),
+                ],
               ),
             ],
           ),

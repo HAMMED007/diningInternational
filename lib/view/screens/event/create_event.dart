@@ -74,7 +74,6 @@ class _CreateEventState extends State<CreateEvent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kTertiaryColor.withOpacity(0.17),
         automaticallyImplyLeading: false,
         titleSpacing: 0,
         title: Row(
@@ -100,313 +99,301 @@ class _CreateEventState extends State<CreateEvent> {
         ),
       ),
       body: SafeArea(
-        child: Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: kTertiaryColor.withOpacity(0.09),
+        child: SingleChildScrollView(
+          padding: symmetric(
+            context,
+            horizontal: 20,
+            vertical: 10,
           ),
-          child: SingleChildScrollView(
-            padding: symmetric(
-              context,
-              horizontal: 20,
-              vertical: 10,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: h(context, 50),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: CustomText(
+                  text: "Create an event",
+                  size: 19,
+                  color: kPrimaryColor.withOpacity(0.71),
+                  weight: FontWeight.w700,
                 ),
-                Center(
-                  child: CustomText(
-                    text: "Create an event",
-                    size: 19,
-                    color: kPrimaryColor.withOpacity(0.71),
-                    weight: FontWeight.w700,
+              ),
+              SizedBox(
+                height: h(context, 60),
+              ),
+              CustomText(
+                text: "Search venues/ hangout spots",
+                size: 13,
+                color: Color(0xff575757),
+                weight: FontWeight.w500,
+              ),
+              SizedBox(
+                height: h(context, 11),
+              ),
+              GestureDetector(
+                onTap: () {
+                  initRenderer();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return PlacePicker(
+                          resizeToAvoidBottomInset: false,
+                          apiKey: Platform.isAndroid
+                              ? "AIzaSyDHiCMDyLm8A01RQrPZYZSouUjGVU6C5sE"
+                              : "AIzaSyDHiCMDyLm8A01RQrPZYZSouUjGVU6C5sE",
+                          hintText: "Find a place ...",
+                          searchingText: "Please wait ...",
+                          selectText: "Select place",
+                          outsideOfPickAreaText: "Place not in area",
+                          initialPosition: HomePage.kInitialPosition,
+                          useCurrentLocation: true,
+                          selectInitialPosition: true,
+                          usePinPointingSearch: true,
+                          usePlaceDetailSearch: true,
+                          zoomGesturesEnabled: true,
+                          zoomControlsEnabled: true,
+                          ignoreLocationPermissionErrors: true,
+                          onMapCreated: (GoogleMapController controller) {},
+                          onPlacePicked: (PickResult result) {
+                            log("Place picked: ${result.formattedAddress}");
+                            eventCreateController.eventTitleTextController
+                                .text = "${result.formattedAddress}";
+
+                            setState(() {
+                              selectedPlace = result;
+                              Navigator.of(context).pop();
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  );
+                },
+                child: AbsorbPointer(
+                  child: CustomTextField3(
+                    onChanged: (value) {},
+                    controller: eventCreateController.eventTitleTextController,
+                    hintText: 'Simply type a name or location ',
                   ),
                 ),
-                SizedBox(
-                  height: h(context, 11),
-                ),
-                CustomText(
-                  text: "Search venues/ hangout spots",
-                  size: 13,
-                  color: Color(0xff575757),
-                  weight: FontWeight.w500,
-                ),
-                SizedBox(
-                  height: h(context, 11),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    initRenderer();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return PlacePicker(
-                            resizeToAvoidBottomInset: false,
-                            apiKey: Platform.isAndroid
-                                ? "AIzaSyDHiCMDyLm8A01RQrPZYZSouUjGVU6C5sE"
-                                : "AIzaSyDHiCMDyLm8A01RQrPZYZSouUjGVU6C5sE",
-                            hintText: "Find a place ...",
-                            searchingText: "Please wait ...",
-                            selectText: "Select place",
-                            outsideOfPickAreaText: "Place not in area",
-                            initialPosition: HomePage.kInitialPosition,
-                            useCurrentLocation: true,
-                            selectInitialPosition: true,
-                            usePinPointingSearch: true,
-                            usePlaceDetailSearch: true,
-                            zoomGesturesEnabled: true,
-                            zoomControlsEnabled: true,
-                            ignoreLocationPermissionErrors: true,
-                            onMapCreated: (GoogleMapController controller) {},
-                            onPlacePicked: (PickResult result) {
-                              log("Place picked: ${result.formattedAddress}");
-                              eventCreateController.eventTitleTextController
-                                  .text = "${result.formattedAddress}";
-
-                              setState(() {
-                                selectedPlace = result;
-                                Navigator.of(context).pop();
-                              });
-                            },
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  child: AbsorbPointer(
-                    child: CustomTextField3(
-                      onChanged: (value) {},
-                      controller:
-                          eventCreateController.eventTitleTextController,
-                      hintText: 'Simply type a name or location ',
+              ),
+              SizedBox(
+                height: h(context, 12),
+              ),
+              CustomText(
+                text: "Add link to restaurant menu",
+                size: 13,
+                color: Color(0xff575757),
+                weight: FontWeight.w500,
+              ),
+              SizedBox(
+                height: h(context, 8),
+              ),
+              CustomTextField(
+                onChanged: (value) {},
+                controller: eventCreateController.eventLinkTextController,
+                hintText: 'Simply type a name or location ',
+              ),
+              SizedBox(
+                height: h(context, 12),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText(
+                          text: "Date",
+                          size: 13,
+                          color: Color(0xff575757),
+                          weight: FontWeight.w500,
+                        ),
+                        SizedBox(
+                          height: h(context, 8),
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            DateTime? selectedDate = await showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2022),
+                              lastDate: DateTime(2025),
+                              cancelText:
+                                  "Cancel", // Set the text for the cancel button
+                            );
+                            if (selectedDate != null) {
+                              // If a date is selected, update the text field's controller
+                              eventCreateController
+                                      .eventDateTextController.text =
+                                  "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+                            } else {
+                              // If the user cancels, clear the text field's controller
+                              eventCreateController
+                                  .eventDateTextController.text = '';
+                            }
+                          },
+                          child: AbsorbPointer(
+                            child: CustomTextField(
+                              controller:
+                                  eventCreateController.eventDateTextController,
+                              hintText: 'DD/MM/YYYY',
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: h(context, 12),
-                ),
-                CustomText(
-                  text: "Add link to restaurant menu",
-                  size: 13,
-                  color: Color(0xff575757),
-                  weight: FontWeight.w500,
-                ),
-                SizedBox(
-                  height: h(context, 8),
-                ),
-                CustomTextField(
-                  onChanged: (value) {},
-                  controller: eventCreateController.eventLinkTextController,
-                  hintText: 'Simply type a name or location ',
-                ),
-                SizedBox(
-                  height: h(context, 12),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomText(
-                            text: "Date",
-                            size: 13,
-                            color: Color(0xff575757),
-                            weight: FontWeight.w500,
-                          ),
-                          SizedBox(
-                            height: h(context, 8),
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              DateTime? selectedDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime(2022),
-                                lastDate: DateTime(2025),
-                                cancelText:
-                                    "Cancel", // Set the text for the cancel button
-                              );
-                              if (selectedDate != null) {
-                                // If a date is selected, update the text field's controller
-                                eventCreateController
-                                        .eventDateTextController.text =
-                                    "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
-                              } else {
-                                // If the user cancels, clear the text field's controller
-                                eventCreateController
-                                    .eventDateTextController.text = '';
+                  SizedBox(
+                    width: w(context, 40),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText(
+                          text: "Time",
+                          size: 13,
+                          color: Color(0xff575757),
+                          weight: FontWeight.w500,
+                        ),
+                        SizedBox(
+                          height: h(context, 8),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Future<TimeOfDay?> startTime = showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            );
+
+                            Future<TimeOfDay?> endTime = showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                            );
+
+                            // Handle both start and end times
+                            Future.wait([startTime, endTime])
+                                .then((List<TimeOfDay?> times) {
+                              if (times[0] != null && times[1] != null) {
+                                String formattedStartTime =
+                                    _formatTime(times[0]!);
+                                String formattedEndTime =
+                                    _formatTime(times[1]!);
+                                String formattedTimeRange =
+                                    '$formattedStartTime - $formattedEndTime';
+                                eventCreateController.eventTimeTextController
+                                    .text = formattedTimeRange;
                               }
-                            },
-                            child: AbsorbPointer(
-                              child: CustomTextField(
-                                controller: eventCreateController
-                                    .eventDateTextController,
-                                hintText: 'DD/MM/YYYY',
+                            });
+                          },
+                          child: AbsorbPointer(
+                            child: TextFormField(
+                              controller:
+                                  eventCreateController.eventTimeTextController,
+                              decoration: InputDecoration(
+                                hintText: 'Select Time Range',
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: w(context, 40),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: h(context, 10),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText(
+                          text: "Max. Attendees",
+                          size: 13,
+                          color: Color(0xff575757),
+                          weight: FontWeight.w500,
+                        ),
+                        SizedBox(
+                          height: h(context, 8),
+                        ),
+                        CustomTextField(
+                          onChanged: (value) {},
+                          controller: eventCreateController
+                              .eventAttendeesTextController,
+                          hintText: 'E.g.: 15',
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomText(
-                            text: "Time",
-                            size: 13,
-                            color: Color(0xff575757),
-                            weight: FontWeight.w500,
-                          ),
-                          SizedBox(
-                            height: h(context, 8),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Future<TimeOfDay?> startTime = showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              );
-
-                              Future<TimeOfDay?> endTime = showTimePicker(
-                                context: context,
-                                initialTime: TimeOfDay.now(),
-                              );
-
-                              // Handle both start and end times
-                              Future.wait([startTime, endTime])
-                                  .then((List<TimeOfDay?> times) {
-                                if (times[0] != null && times[1] != null) {
-                                  String formattedStartTime =
-                                      _formatTime(times[0]!);
-                                  String formattedEndTime =
-                                      _formatTime(times[1]!);
-                                  String formattedTimeRange =
-                                      '$formattedStartTime - $formattedEndTime';
-                                  eventCreateController.eventTimeTextController
-                                      .text = formattedTimeRange;
-                                }
-                              });
-                            },
-                            child: AbsorbPointer(
-                              child: TextFormField(
-                                controller: eventCreateController
-                                    .eventTimeTextController,
-                                decoration: InputDecoration(
-                                  hintText: 'Select Time Range',
-                                ),
-                              ),
+                  ),
+                  SizedBox(
+                    width: w(context, 40),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        CustomText(
+                          text: "Upload your picture",
+                          size: 13,
+                          color: Color(0xff575757),
+                          weight: FontWeight.w500,
+                        ),
+                        SizedBox(
+                          height: h(context, 11),
+                        ),
+                        Row(
+                          children: [
+                            Obx(
+                              () => eventCreateController.selectedImage.value ==
+                                      null
+                                  ? GestureDetector(
+                                      onTap: () async {
+                                        eventCreateController
+                                                .selectedImage.value =
+                                            await eventCreateController
+                                                .pickImageFromGallery();
+                                      },
+                                      child: CommonImageView(
+                                        imagePath: Assets.imagesUpload,
+                                        fit: BoxFit.contain,
+                                        height: h(context, 25),
+                                        width: w(context, 30),
+                                      ),
+                                    )
+                                  : CommonImageView(
+                                      file: eventCreateController
+                                          .selectedImage.value,
+                                      fit: BoxFit.contain,
+                                      height: h(context, 25),
+                                      width: w(context, 30),
+                                    ),
                             ),
-                          ),
-                        ],
-                      ),
+                            CustomText(
+                              text: "Jpeg or png",
+                              size: 12,
+                              color: Color.fromRGBO(135, 135, 135, 0.60),
+                              paddingLeft: 11,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: h(context, 10),
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomText(
-                            text: "Max. Attendees",
-                            size: 13,
-                            color: Color(0xff575757),
-                            weight: FontWeight.w500,
-                          ),
-                          SizedBox(
-                            height: h(context, 8),
-                          ),
-                          CustomTextField(
-                            onChanged: (value) {},
-                            controller: eventCreateController
-                                .eventAttendeesTextController,
-                            hintText: 'E.g.: 15',
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: w(context, 40),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CustomText(
-                            text: "Upload your picture",
-                            size: 13,
-                            color: Color(0xff575757),
-                            weight: FontWeight.w500,
-                          ),
-                          SizedBox(
-                            height: h(context, 11),
-                          ),
-                          Row(
-                            children: [
-                              Obx(
-                                () =>
-                                    eventCreateController.selectedImage.value ==
-                                            null
-                                        ? GestureDetector(
-                                            onTap: () async {
-                                              eventCreateController
-                                                      .selectedImage.value =
-                                                  await eventCreateController
-                                                      .pickImageFromGallery();
-                                            },
-                                            child: CommonImageView(
-                                              imagePath: Assets.imagesUpload,
-                                              fit: BoxFit.contain,
-                                              height: h(context, 25),
-                                              width: w(context, 30),
-                                            ),
-                                          )
-                                        : CommonImageView(
-                                            file: eventCreateController
-                                                .selectedImage.value,
-                                            fit: BoxFit.contain,
-                                            height: h(context, 25),
-                                            width: w(context, 30),
-                                          ),
-                              ),
-                              CustomText(
-                                text: "Jpeg or png",
-                                size: 12,
-                                color: Color.fromRGBO(135, 135, 135, 0.60),
-                                paddingLeft: 11,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: h(context, 50),
-                ),
-                Row(
-                  children: [
-                    AgreementCheckbox(),
-                  ],
-                )
-              ],
-            ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: h(context, 10),
+              ),
+              Row(
+                children: [
+                  AgreementCheckbox(),
+                ],
+              )
+            ],
           ),
         ),
       ),
@@ -424,19 +411,20 @@ class _AgreementCheckboxState extends State<AgreementCheckbox> {
   EventCreateController eventCreateController = Get.find();
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Checkbox(
-          value: isChecked,
-          onChanged: (bool? value) {
-            setState(() {
-              isChecked = value ?? false;
-            });
-          },
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Checkbox(
+              value: isChecked,
+              onChanged: (bool? value) {
+                setState(() {
+                  isChecked = value ?? false;
+                });
+              },
+            ),
             CustomText(
               text: "I agree to all the",
               size: 12,
@@ -452,13 +440,15 @@ class _AgreementCheckboxState extends State<AgreementCheckbox> {
           ],
         ),
         SizedBox(
-          width: w(context, 70),
+          height: h(context, 10),
         ),
         Obx(
           () => eventCreateController.isLoading.value
-              ? CustomCircularIndicator(
-                  containerColor: Colors.transparent,
-                  indicatorColor: kTertiaryColor,
+              ? Center(
+                  child: CustomCircularIndicator(
+                    containerColor: Colors.transparent,
+                    indicatorColor: kTertiaryColor,
+                  ),
                 )
               : CustomButton2(
                   firstText: "Create event",
@@ -493,10 +483,13 @@ class _AgreementCheckboxState extends State<AgreementCheckbox> {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) =>
-                              CustomDialogForSuccessOrFailure(
-                            imagePath: userModelGlobal.value.userProfilePic,
+                              CustomDialogCreateEvent(
+                            imagePath:
+                                eventCreateController.selectedImage.value!,
                             address: eventCreateController
                                 .eventLinkTextController.text,
+                            totalAttendees: int.parse(eventCreateController
+                                .eventAttendeesTextController.text),
                             date: eventCreateController
                                 .eventDateTextController.text,
                             time: eventCreateController
@@ -514,8 +507,11 @@ class _AgreementCheckboxState extends State<AgreementCheckbox> {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) =>
-                              CustomDialogForSuccessOrFailure(
-                            imagePath: userModelGlobal.value.userProfilePic,
+                              CustomDialogCreateEvent(
+                            imagePath:
+                                eventCreateController.selectedImage.value!,
+                            totalAttendees: int.parse(eventCreateController
+                                .eventAttendeesTextController.text),
                             address: eventCreateController
                                 .eventLinkTextController.text,
                             date: eventCreateController
@@ -534,10 +530,13 @@ class _AgreementCheckboxState extends State<AgreementCheckbox> {
                       }
                     }
                   },
-                  width: 129,
+                  width: 360,
                   height: 35,
                 ),
-        )
+        ),
+        SizedBox(
+          height: h(context, 10),
+        ),
       ],
     );
   }

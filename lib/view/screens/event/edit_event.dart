@@ -77,7 +77,6 @@ class _EditEventState extends State<EditEvent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kTertiaryColor.withOpacity(0.09),
         automaticallyImplyLeading: false,
         titleSpacing: 0,
         title: Row(
@@ -112,9 +111,6 @@ class _EditEventState extends State<EditEvent> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: h(context, 50),
-              ),
               Center(
                 child: CustomText(
                   text: "Edit your event",
@@ -124,7 +120,7 @@ class _EditEventState extends State<EditEvent> {
                 ),
               ),
               SizedBox(
-                height: h(context, 50),
+                height: h(context, 67),
               ),
               CustomText(
                 text: "Search venues/ hangout spots",
@@ -389,147 +385,180 @@ class _EditEventState extends State<EditEvent> {
                 ],
               ),
               SizedBox(
-                height: h(context, 50),
+                height: h(context, 40),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CustomButton2(
-                    firstText: "Delete event",
-                    secText: "",
-                    onTap: () async {
-                      bool isSuccess = await eventController
-                          .deleteEvent(widget.eventModel.eventId ?? "");
+              Obx(
+                () => eventController.isLoading.value
+                    ? Center(
+                        child: CustomCircularIndicator(
+                          containerColor: Colors.transparent,
+                          indicatorColor: kTertiaryColor,
+                        ),
+                      )
+                    : CustomButton(
+                        buttonText: "Edit event",
+                        onTap: () async {
+                          // All fields are filled and checkbox is checked, proceed to create event
+                          bool isSuccess = await eventController
+                              .updateEvent(widget.eventModel.eventId ?? "");
 
-                      //TODO: Need to put the deletion dialog box
-                      // Check if the event creation was successful
-                      if (isSuccess) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              CustomDialogForSuccessOrFailure(
-                            imagePath: userModelGlobal.value.userProfilePic,
-                            address: widget.eventModel.link,
-                            date: widget.eventModel.date,
-                            time: widget.eventModel.time,
-                            isSuccess: isSuccess,
-                            message: "Your event has been deleted",
-                            title: widget.eventModel.title,
-                          ),
-                        );
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              CustomDialogForSuccessOrFailure(
-                            title: widget.eventModel.title,
-                            imagePath: userModelGlobal.value.userProfilePic,
-                            address: widget.eventModel.link,
-                            date: widget.eventModel.date,
-                            time: widget.eventModel.time,
-                            isSuccess: isSuccess,
-                            message: "Your event has not been deleted",
-                          ),
-                        );
-                      }
-                      // showDialog(
-                      //   context: context,
-                      //   builder: (BuildContext context) =>
-                      //       ConfirmCustomDialog(),
-                      // );
-                    },
-                    width: 129,
-                    height: 35,
-                    backgroundColor: Color(0xffF0F0F0),
-                  ),
-                  Obx(
-                    () => eventController.isLoading.value
-                        ? CustomCircularIndicator(
-                            containerColor: Colors.transparent,
-                            indicatorColor: kTertiaryColor,
-                          )
-                        : CustomButton2(
-                            firstText: "Edit event",
-                            secText: "",
-                            onTap: () async {
-                              // All fields are filled and checkbox is checked, proceed to create event
-                              bool isSuccess = await eventController
-                                  .updateEvent(widget.eventModel.eventId ?? "");
-                              // Check if the event creation was successful
-                              if (isSuccess) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      CustomDialogForSuccessOrFailure(
-                                    imagePath:
-                                        userModelGlobal.value.userProfilePic,
-                                    address: eventController
-                                                .eventLinkTextController.text ==
-                                            ""
-                                        ? eventController
-                                            .eventModelToUpdate?.value.link
-                                        : eventController
-                                            .eventLinkTextController.text,
-                                    date: eventController
-                                                .eventDateTextController.text ==
-                                            ""
-                                        ? eventController
-                                            .eventModelToUpdate?.value.date
-                                        : eventController
-                                            .eventDateTextController.text,
-                                    time: eventController
-                                                .eventTimeTextController.text ==
-                                            ""
-                                        ? eventController
-                                            .eventModelToUpdate?.value.time
-                                        : eventController
-                                            .eventTimeTextController.text,
-                                    isSuccess: isSuccess,
-                                    message: "Your event has been updated",
-                                    title: eventController
-                                                .eventTitleTextController
-                                                .text ==
-                                            ""
-                                        ? eventController
-                                            .eventModelToUpdate?.value.title
-                                        : eventController
-                                            .eventTitleTextController.text,
-                                  ),
-                                ).then((_) {
-                                  // Clear the controller fields after closing the dialog
-                                  eventController.clearTextControllers();
-                                  Get.back();
-                                });
-                              } else {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      CustomDialogForSuccessOrFailure(
-                                    imagePath:
-                                        userModelGlobal.value.userProfilePic,
-                                    address: eventController
-                                        .eventLinkTextController.text,
-                                    date: eventController
-                                        .eventDateTextController.text,
-                                    time: eventController
-                                        .eventTimeTextController.text,
-                                    isSuccess: isSuccess,
-                                    message: "Your event has not been created",
-                                    title: eventController
-                                        .eventTitleTextController.text,
-                                  ),
-                                ).then((_) {
-                                  // Clear the controller fields after closing the dialog
-                                  eventController.clearTextControllers();
-                                });
-                              }
-                            },
-                            width: 129,
-                            height: 35,
-                          ),
-                  )
-                ],
-              )
+                          // Check if the event creation was successful
+                          if (isSuccess) {
+                            Get.to(() => CustomDialogForSuccessOrFailure(
+                                  attendees:
+                                      widget.eventModel.attendees?.length ?? 0,
+                                  totalAttendees: eventController
+                                              .eventAttendeesTextController
+                                              .text ==
+                                          ""
+                                      ? int.parse(
+                                          widget.eventModel.attendeesTotal ??
+                                              "0")
+                                      : int.parse(eventController
+                                          .eventAttendeesTextController.text),
+                                  imagePath: eventController
+                                          .eventModelToUpdate?.value.imageUrl ??
+                                      "",
+                                  address: eventController
+                                          .eventLinkTextController.text.isEmpty
+                                      ? eventController
+                                          .eventModelToUpdate?.value.link
+                                      : eventController
+                                          .eventLinkTextController.text,
+                                  date: eventController
+                                          .eventDateTextController.text.isEmpty
+                                      ? eventController
+                                          .eventModelToUpdate?.value.date
+                                      : eventController
+                                          .eventDateTextController.text,
+                                  time: eventController
+                                          .eventTimeTextController.text.isEmpty
+                                      ? eventController
+                                          .eventModelToUpdate?.value.time
+                                      : eventController
+                                          .eventTimeTextController.text,
+                                  isSuccess: isSuccess,
+                                  message: "Your event has been updated",
+                                  location: eventController
+                                          .eventTitleTextController.text.isEmpty
+                                      ? eventController
+                                          .eventModelToUpdate?.value.link
+                                      : eventController
+                                          .eventTitleTextController.text,
+                                  title: eventController
+                                          .eventTitleTextController.text.isEmpty
+                                      ? eventController
+                                          .eventModelToUpdate?.value.title
+                                      : eventController
+                                          .eventTitleTextController.text,
+                                ));
+                          } else {
+                            Get.to(() => CustomDialogForSuccessOrFailure(
+                                  attendees:
+                                      widget.eventModel.attendees?.length ?? 0,
+                                  totalAttendees: eventController
+                                              .eventAttendeesTextController
+                                              .text ==
+                                          ""
+                                      ? int.parse(
+                                          widget.eventModel.attendeesTotal ??
+                                              "0")
+                                      : int.parse(eventController
+                                          .eventAttendeesTextController.text),
+                                  imagePath:
+                                      userModelGlobal.value.userProfilePic,
+                                  address: eventController
+                                      .eventLinkTextController.text,
+                                  date: eventController
+                                      .eventDateTextController.text,
+                                  time: eventController
+                                      .eventTimeTextController.text,
+                                  isSuccess: isSuccess,
+                                  message: "Your event has not been created",
+                                  title: eventController
+                                      .eventTitleTextController.text,
+                                ));
+                          }
+                        },
+                        height: 40,
+                      ),
+              ),
+              SizedBox(
+                height: h(context, 11),
+              ),
+              CustomButton2(
+                firstText: "Cancel",
+                secText: "",
+                onTap: () {
+                  Get.back();
+                },
+                height: 40,
+                textColor: kSecondaryColor,
+                backgroundColor: Color(0xff636363),
+              ),
+              SizedBox(
+                height: h(context, 11),
+              ),
+              CustomButton2(
+                firstText: "Delete event",
+                secText: "",
+                onTap: () async {
+                  bool isSuccess = await eventController
+                      .deleteEvent(widget.eventModel.eventId ?? "");
+
+                  //TODO: Need to put the deletion dialog box
+                  // Check if the event creation was successful
+                  if (isSuccess) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => CustomDialogDelete(
+                        attendees: widget.eventModel.attendees?.length ?? 0,
+                        totalAttendees: eventController
+                                    .eventAttendeesTextController.text ==
+                                ""
+                            ? int.parse(widget.eventModel.attendeesTotal ?? "0")
+                            : int.parse(eventController
+                                .eventAttendeesTextController.text),
+                        imagePath: eventController
+                                .eventModelToUpdate?.value.imageUrl ??
+                            "",
+                        address: widget.eventModel.link,
+                        date: widget.eventModel.date,
+                        time: widget.eventModel.time,
+                        isSuccess: isSuccess,
+                        isdelete: true,
+                        message: "Your event has been deleted",
+                        title: widget.eventModel.title,
+                      ),
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => CustomDialogDelete(
+                        attendees: widget.eventModel.attendees?.length ?? 0,
+                        totalAttendees:
+                            int.parse(widget.eventModel.attendeesTotal ?? "0"),
+                        title: widget.eventModel.title,
+                        imagePath: userModelGlobal.value.userProfilePic,
+                        address: widget.eventModel.link,
+                        date: widget.eventModel.date,
+                        time: widget.eventModel.time,
+                        isSuccess: isSuccess,
+                        isdelete: true,
+                        message: "Your event has not been deleted",
+                      ),
+                    );
+                  }
+                  // showDialog(
+                  //   context: context,
+                  //   builder: (BuildContext context) =>
+                  //       ConfirmCustomDialog(),
+                  // );
+                },
+                height: 40,
+                textColor: kSecondaryColor,
+                backgroundColor: Color(0xffFF0000),
+              ),
             ],
           ),
         ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gaa/core/globals/global_functions.dart';
@@ -12,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../core/utils/firebase_collections.dart';
 import '../../models/event/event_model.dart';
 import '../../view/screens/bottombar/bottombar.dart';
+import '../notification/notification_handler.dart';
 
 class EventCreateController extends GetxController {
   TextEditingController eventTitleTextController = TextEditingController();
@@ -69,12 +71,45 @@ class EventCreateController extends GetxController {
       await eventDocRef.update({'eventId': eventId});
 
       isLoading.value = false;
+
+      List<dynamic> allDeviceIds = await fetchArray();
+      // Get the FCM token
+      FirebaseMessagingApi().sendFCMNotification(
+          deviceToken: allDeviceIds,
+          title: "New Event Created",
+          body: event.title ?? "",
+          type: "global",
+          sentBy: userModelGlobal.value.userId ?? "",
+          sentTo: "");
       //clearTextControllers();
       return true; // Return true indicating success
     } catch (e) {
       isLoading.value = false;
       print('Error creating event: $e');
       return false; // Return false indicating failure
+    }
+  }
+
+  //a function to fetch a list of registration ids
+  Future<List<dynamic>> fetchArray() async {
+    try {
+      // Get the document snapshot
+      DocumentSnapshot documentSnapshot =
+          await deviceIdsCollection.doc('deviceIds').get();
+
+      // Check if the document exists
+      if (documentSnapshot.exists) {
+        // Access the array field from the document data
+        List<dynamic> yourArray = documentSnapshot['ids'];
+        return yourArray;
+      } else {
+        // Handle case where document doesn't exist
+        return []; // Or throw an error
+      }
+    } catch (e) {
+      // Handle any errors
+      print('Error fetching array: $e');
+      return []; // Or throw an error
     }
   }
 

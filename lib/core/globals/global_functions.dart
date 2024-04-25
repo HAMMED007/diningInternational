@@ -1,16 +1,19 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unnecessary_brace_in_string_interps
 
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gaa/controller/event/event_controller.dart';
+import 'package:gaa/view/screens/home/home.dart';
 import 'package:get/get.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/app_images.dart';
 import '../../constants/app_styling.dart';
 import '../../models/user/user_model.dart';
+import '../../view/screens/bottombar/bottombar.dart';
 import '../../view/widget/Custom_button_widget.dart';
 import '../../view/widget/Custom_divider_widget.dart';
 import '../../view/widget/Custom_text_widget.dart';
@@ -95,123 +98,554 @@ Color getBackgroundColor(int index) {
   }
 }
 
-class CustomDialogForSuccessOrFailure extends StatelessWidget {
+class CustomDialogDelete extends StatelessWidget {
   final String? title;
   final String? address;
+  final String? location;
+  final int? attendees;
+  final int? totalAttendees;
   final String? date;
   final String? time;
   final String? imagePath;
   final String? message;
   final bool? isSuccess;
+  final bool? isdelete;
 
-  CustomDialogForSuccessOrFailure({
-    required this.title,
+  CustomDialogDelete({
+    this.title = "",
     this.address = "",
     this.date = "",
     this.time = "",
     this.imagePath = "",
     this.message = "",
     this.isSuccess = true,
+    this.location = "",
+    this.attendees = 0,
+    this.totalAttendees = 0,
+    this.isdelete = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(h(context, 5)),
-        side: const BorderSide(
-          color: Color.fromRGBO(255, 255, 255, 0.20),
-          width: 4.68,
-        ),
-      ),
-      child: Container(
-        height: h(context, 325),
-        width: w(context, 385),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(h(context, 5)),
-          color: kSecondaryColor,
-          border: Border.all(
-            color: const Color.fromRGBO(255, 255, 255, 0.20),
-            width: w(context, 4.68),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 15.6,
-              spreadRadius: 0,
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        title: Row(
+          children: [
+            IconButton(
+              icon: Image.asset(
+                Assets.imagesRefresh,
+                height: h(context, 45),
+                width: w(context, 42),
+              ),
+              onPressed: () {},
             ),
           ],
         ),
-        child: Padding(
-          padding: all(context, 10),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomText(
-                      // text: '$title, $address',
-                      text: '$title',
-
-                      size: 14,
-                      color: const Color(0xff573926),
-                    ),
-                  ),
-                  SizedBox(
-                    width: w(context, 15),
-                  ),
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(imagePath ?? dummyProfilePic),
-                    radius: 28,
-                  )
-                ],
-              ),
-              const CustomDivider(),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CommonImageView(
-                    imagePath: Assets.imagesCalender,
-                    fit: BoxFit.contain,
-                    height: h(context, 17),
-                    width: w(context, 17),
-                  ),
-                  CustomText(
-                    text: "${date}",
-                    paddingLeft: 6,
-                  ),
-                  SizedBox(
-                    width: w(context, 34),
-                  ),
-                  CommonImageView(
-                    imagePath: Assets.imagesClock,
-                    fit: BoxFit.contain,
-                    height: h(context, 17),
-                    width: w(context, 17),
-                  ),
-                  CustomText(
-                    text: "${time}",
-                    paddingLeft: 6,
-                  ),
-                ],
-              ),
-              Center(
-                child: CommonImageView(
-                  imagePath: isSuccess! ? Assets.imagesHappy : Assets.imagesSad,
-                  fit: BoxFit.contain,
-                  height: h(context, 138),
-                  width: w(context, 190),
+      ),
+      body: Padding(
+        padding: all(context, 20),
+        child: Column(
+          children: [
+            Container(
+              width: w(context, 385),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(h(context, 5)),
+                color: kSecondaryColor,
+                border: Border.all(
+                  color: const Color(0xffE9E7E5),
+                  width: w(context, 0.5),
                 ),
               ),
-              CustomText(
-                text: "${message}",
-                size: 22,
-                textAlign: TextAlign.center,
-                weight: FontWeight.w700,
-                color: const Color(0xff6B6B6B),
+              child: Padding(
+                padding: all(context, 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              CommonImageView(
+                                imagePath: Assets.imagesCalender,
+                                fit: BoxFit.contain,
+                                height: h(context, 17),
+                                width: w(context, 17),
+                              ),
+                              CustomText(text: "${date}", paddingLeft: 6),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomText(
+                                  text: '$title, $location',
+                                  // text: '$title',
+
+                                  size: 14,
+                                  color: const Color(0xff573926),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const CustomDivider(),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CommonImageView(
+                                imagePath: Assets.imagesClock,
+                                fit: BoxFit.contain,
+                                height: h(context, 17),
+                                width: w(context, 17),
+                              ),
+                              CustomText(text: "${time}", paddingLeft: 6),
+                            ],
+                          ),
+                          SizedBox(height: h(context, 5)),
+                          Row(
+                            children: [
+                              CustomText(
+                                text: "Attendees : $attendees/$totalAttendees",
+                                weight: FontWeight.w500,
+                                size: 15,
+                              ),
+                              Image.asset(
+                                Assets.imagesShare,
+                                height: h(context, 18),
+                                width: w(context, 18),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),
+            SizedBox(
+              height: h(context, 8),
+            ),
+            Container(
+              width: double.infinity,
+              height: h(context, 294),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(h(context, 5)),
+                border: Border.all(color: kGreyColor),
+                image: DecorationImage(
+                  image: NetworkImage(imagePath ?? dummyProfilePic),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: h(context, 44),
+            ),
+            Container(
+              height: h(context, 40),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: const Color(0xff6B6B6B),
+                  width: 0.45,
+                ),
+                borderRadius: BorderRadius.circular(
+                  h(context, 5),
+                ),
+              ),
+              child: Center(
+                child: CustomText(
+                  text: "${message}",
+                  color: const Color(0xff6B6B6B),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: h(context, 10),
+            ),
+            CustomButton2(
+              firstText: "Go to home",
+              textColor: kSecondaryColor,
+              backgroundColor: isSuccess!
+                  ? const Color(0xffF7931A)
+                  : const Color(0xffFF005C),
+              secText: "",
+              onTap: () {
+                Get.offAll(() => BottomBar());
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomDialogForSuccessOrFailure extends StatelessWidget {
+  final String? title;
+  final String? address;
+  final String? location;
+  final int? attendees;
+  final int? totalAttendees;
+  final String? date;
+  final String? time;
+  final String? imagePath;
+  final String? message;
+  final bool? isSuccess;
+  final bool? isdelete;
+
+  CustomDialogForSuccessOrFailure({
+    this.title = "",
+    this.address = "",
+    this.date = "",
+    this.time = "",
+    this.imagePath = "",
+    this.message = "",
+    this.isSuccess = true,
+    this.location = "",
+    this.attendees = 0,
+    this.totalAttendees = 0,
+    this.isdelete = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        title: Row(
+          children: [
+            IconButton(
+              icon: Image.asset(
+                Assets.imagesRefresh,
+                height: h(context, 45),
+                width: w(context, 42),
+              ),
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+      body: Padding(
+        padding: all(context, 20),
+        child: Column(
+          children: [
+            Container(
+              width: w(context, 385),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(h(context, 5)),
+                color: kSecondaryColor,
+                border: Border.all(
+                  color: const Color(0xffE9E7E5),
+                  width: w(context, 0.5),
+                ),
+              ),
+              child: Padding(
+                padding: all(context, 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              CommonImageView(
+                                imagePath: Assets.imagesCalender,
+                                fit: BoxFit.contain,
+                                height: h(context, 17),
+                                width: w(context, 17),
+                              ),
+                              CustomText(text: "${date}", paddingLeft: 6),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomText(
+                                  text: '$title, $location',
+                                  // text: '$title',
+
+                                  size: 14,
+                                  color: const Color(0xff573926),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const CustomDivider(),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CommonImageView(
+                                imagePath: Assets.imagesClock,
+                                fit: BoxFit.contain,
+                                height: h(context, 17),
+                                width: w(context, 17),
+                              ),
+                              CustomText(text: "${time}", paddingLeft: 6),
+                            ],
+                          ),
+                          SizedBox(height: h(context, 5)),
+                          Row(
+                            children: [
+                              CustomText(
+                                text: "Attendees : $attendees/$totalAttendees",
+                                weight: FontWeight.w500,
+                                size: 15,
+                              ),
+                              Image.asset(
+                                Assets.imagesShare,
+                                height: h(context, 18),
+                                width: w(context, 18),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: h(context, 8),
+            ),
+            Container(
+              width: double.infinity,
+              height: h(context, 294),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(h(context, 5)),
+                border: Border.all(color: kGreyColor),
+                image: DecorationImage(
+                  image: NetworkImage(imagePath ?? dummyProfilePic),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: h(context, 44),
+            ),
+            Container(
+              height: h(context, 40),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: const Color(0xff6B6B6B),
+                  width: 0.45,
+                ),
+                borderRadius: BorderRadius.circular(
+                  h(context, 5),
+                ),
+              ),
+              child: Center(
+                child: CustomText(
+                  text: "${message}",
+                  color: const Color(0xff6B6B6B),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: h(context, 15),
+            ),
+            if (isdelete!)
+              CustomButton2(
+                firstText: isSuccess! ? "Edit event" : "Try again",
+                textColor: kSecondaryColor,
+                backgroundColor: isSuccess!
+                    ? const Color(0xffF7931A)
+                    : const Color(0xffFF005C),
+                secText: "",
+                onTap: () {
+                  Get.back();
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomDialogCreateEvent extends StatelessWidget {
+  final String? title;
+  final String? address;
+  final String? location;
+  final int? attendees;
+  final int? totalAttendees;
+  final String? date;
+  final String? time;
+  final File imagePath;
+  final String? message;
+  final bool? isSuccess;
+  final bool? isdelete;
+
+  CustomDialogCreateEvent({
+    this.title = "",
+    this.address = "",
+    this.date = "",
+    this.time = "",
+    required this.imagePath,
+    this.message = "",
+    this.isSuccess = true,
+    this.location = "",
+    this.attendees = 0,
+    this.totalAttendees = 0,
+    this.isdelete = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        title: Row(
+          children: [
+            IconButton(
+              icon: Image.asset(
+                Assets.imagesRefresh,
+                height: h(context, 45),
+                width: w(context, 42),
+              ),
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+      body: Padding(
+        padding: all(context, 20),
+        child: Column(
+          children: [
+            Container(
+              width: w(context, 385),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(h(context, 5)),
+                color: kSecondaryColor,
+                border: Border.all(
+                  color: const Color(0xffE9E7E5),
+                  width: w(context, 0.5),
+                ),
+              ),
+              child: Padding(
+                padding: all(context, 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              CommonImageView(
+                                imagePath: Assets.imagesCalender,
+                                fit: BoxFit.contain,
+                                height: h(context, 17),
+                                width: w(context, 17),
+                              ),
+                              CustomText(text: "${date}", paddingLeft: 6),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomText(
+                                  text: '$title, $location',
+                                  // text: '$title',
+
+                                  size: 14,
+                                  color: const Color(0xff573926),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const CustomDivider(),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CommonImageView(
+                                imagePath: Assets.imagesClock,
+                                fit: BoxFit.contain,
+                                height: h(context, 17),
+                                width: w(context, 17),
+                              ),
+                              CustomText(text: "${time}", paddingLeft: 6),
+                            ],
+                          ),
+                          SizedBox(height: h(context, 5)),
+                          Row(
+                            children: [
+                              CustomText(
+                                text: "Attendees : $attendees/$totalAttendees",
+                                weight: FontWeight.w500,
+                                size: 15,
+                              ),
+                              Image.asset(
+                                Assets.imagesShare,
+                                height: h(context, 18),
+                                width: w(context, 18),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: h(context, 8),
+            ),
+            Container(
+              width: double.infinity,
+              height: h(context, 294),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(h(context, 5)),
+                border: Border.all(color: kGreyColor),
+                image: DecorationImage(
+                  image: FileImage(imagePath),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: h(context, 44),
+            ),
+            Container(
+              height: h(context, 40),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: const Color(0xff6B6B6B),
+                  width: 0.45,
+                ),
+                borderRadius: BorderRadius.circular(
+                  h(context, 5),
+                ),
+              ),
+              child: Center(
+                child: CustomText(
+                  text: "${message}",
+                  color: const Color(0xff6B6B6B),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: h(context, 15),
+            ),
+            if (isdelete!)
+              CustomButton2(
+                firstText: isSuccess! ? "Edit event" : "Try again",
+                textColor: kSecondaryColor,
+                backgroundColor: isSuccess!
+                    ? const Color(0xffF7931A)
+                    : const Color(0xffFF005C),
+                secText: "",
+                onTap: () {
+                  Get.back();
+                },
+              ),
+          ],
         ),
       ),
     );

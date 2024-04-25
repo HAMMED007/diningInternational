@@ -23,7 +23,7 @@ class CustomTextField extends StatelessWidget {
       width: w(context, 400),
       height: h(context, 40),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(h(context, 20)),
+        borderRadius: BorderRadius.circular(h(context, 5)),
         border: Border.all(
           color: kTertiaryColor,
           width: w(context, 0.5),
@@ -83,7 +83,7 @@ class _CustomTextField2State extends State<CustomTextField2> {
       width: w(context, 400),
       height: h(context, 40),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(h(context, 20)),
+        borderRadius: BorderRadius.circular(h(context, 5)),
         border: Border.all(
           color: kTertiaryColor,
           width: w(context, 0.5),
@@ -155,7 +155,7 @@ class CustomTextField3 extends StatelessWidget {
       width: w(context, 400),
       height: h(context, 40),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(h(context, 20)),
+        borderRadius: BorderRadius.circular(h(context, 5)),
         border: Border.all(
           color: kTertiaryColor,
           width: w(context, 0.5),

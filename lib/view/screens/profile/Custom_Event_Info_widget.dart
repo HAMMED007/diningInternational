@@ -29,13 +29,13 @@ class CustomEventInfo extends StatelessWidget {
 
     return SizedBox(
       width: w(context, 170),
-      height: h(context, 130),
+      height: h(context, 200),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: w(context, 160),
-            height: h(context, 130),
+            height: h(context, 170),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(h(context, 10)),
               image: DecorationImage(

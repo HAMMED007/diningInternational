@@ -25,7 +25,6 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kTertiaryColor.withOpacity(0.17),
         automaticallyImplyLeading: false,
         titleSpacing: 0,
         title: Row(
@@ -58,179 +57,168 @@ class Profile extends StatelessWidget {
           ],
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          color: kTertiaryColor.withOpacity(0.09),
-          image: DecorationImage(
-            image: AssetImage(Assets.imagesBg),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Padding(
-          padding: symmetric(
-            context,
-            horizontal: 20,
-            vertical: 10,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Obx(
-                () => CustomProfileInfo(
-                  profileImage: userModelGlobal.value.userProfilePic == ""
-                      ? dummyProfilePic
-                      : userModelGlobal.value.userProfilePic!,
-                  username: userModelGlobal.value.userFirstName == ''
-                      ? "YourUsername"
-                      : userModelGlobal.value.userFirstName!,
-                  description: userModelGlobal.value.userBio == ''
-                      ? "Your Bio"
-                      : userModelGlobal.value.userBio!,
-                ),
+      body: ListView(
+        children: [
+          SizedBox(
+            height: h(context, 640),
+            width: double.maxFinite,
+            child: Padding(
+              padding: symmetric(
+                context,
+                horizontal: 20,
+                vertical: 10,
               ),
-              SizedBox(
-                height: h(context, 10),
-              ),
-              Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomButton(
-                    buttonText: "Edit your profile",
-                    width: w(context, 140),
-                    backgroundColor: Color(0xffF9E0C2),
-                    textColor: kPrimaryColor,
-                    fontWeight: FontWeight.w400,
-                    textSize: 11,
-                    height: 30,
-                    onTap: () {
-                      Get.to(() => EditProfile());
-                    },
+                  Obx(
+                    () => CustomProfileInfo(
+                      profileImage: userModelGlobal.value.userProfilePic == ""
+                          ? dummyProfilePic
+                          : userModelGlobal.value.userProfilePic!,
+                      username: userModelGlobal.value.userFirstName == ''
+                          ? "YourUsername"
+                          : userModelGlobal.value.userFirstName!,
+                      description: userModelGlobal.value.userBio == ''
+                          ? "Your Bio"
+                          : userModelGlobal.value.userBio!,
+                      location: userModelGlobal.value.userLocation == ''
+                          ? "Your location"
+                          : userModelGlobal.value.userLocation!,
+                    ),
                   ),
                   SizedBox(
-                    width: 10,
+                    height: h(context, 10),
                   ),
-                  CustomButton(
-                    buttonText: "Log Out",
-                    width: w(context, 140),
-                    backgroundColor: Colors.red.shade300,
-                    textColor: kPrimaryColor,
-                    fontWeight: FontWeight.w400,
-                    textSize: 11,
-                    height: 30,
-                    onTap: () {
-                      Get.find<AuthController>().signOut();
-                      Get.offAll(() => SignIn());
-                    },
+                  Row(
+                    children: [
+                      CustomButton(
+                        buttonText: "Edit your profile",
+                        width: w(context, 140),
+                        backgroundColor: Color(0xffF9E0C2),
+                        textColor: kPrimaryColor,
+                        fontWeight: FontWeight.w400,
+                        textSize: 11,
+                        height: 30,
+                        onTap: () {
+                          Get.to(() => EditProfile());
+                        },
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      CustomButton(
+                        buttonText: "Log Out",
+                        width: w(context, 140),
+                        backgroundColor: Colors.red.shade300,
+                        textColor: kPrimaryColor,
+                        fontWeight: FontWeight.w400,
+                        textSize: 11,
+                        height: 30,
+                        onTap: () {
+                          Get.find<AuthController>().signOut();
+                          Get.offAll(() => SignIn());
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: h(context, 34),
+                  ),
+                  CustomText(
+                    text: "Events created by you",
+                    size: 14,
+                    weight: FontWeight.w500,
+                  ),
+                  SizedBox(
+                    height: h(context, 5),
+                  ),
+                  Expanded(
+                    child: Obx(
+                      () => eventController.eventsAttending.isNotEmpty
+                          ? ListView.builder(
+                              itemCount: eventController.eventsAttending.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                //                            final event = events[index];
+                                return Padding(
+                                  padding: only(
+                                    context,
+                                    right: 13,
+                                  ),
+                                  child: CustomEventInfo(
+                                    imagePath: eventController.eventsAttending
+                                            .value[index].imageUrl ??
+                                        dummyNoImage,
+                                    rating: 4,
+                                    title: eventController.eventsAttending
+                                            .value[index].title ??
+                                        "",
+                                    location: eventController.eventsAttending
+                                            .value[index].link ??
+                                        "",
+                                  ),
+                                );
+                              },
+                            )
+                          : Center(
+                              child: Text("No DATA"),
+                            ),
+                    ),
+                  ),
+                  CustomText(
+                    text: "Events you have registered for",
+                    size: 14,
+                    weight: FontWeight.w500,
+                  ),
+                  SizedBox(
+                    height: h(context, 5),
+                  ),
+                  Expanded(
+                    child: Obx(
+                      () => eventController.eventsAlreadyAttending.isNotEmpty
+                          ? ListView.builder(
+                              itemCount:
+                                  eventController.eventsAlreadyAttending.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                //                            final event = events[index];
+                                return Padding(
+                                  padding: only(
+                                    context,
+                                    right: 13,
+                                  ),
+                                  child: CustomEventInfo(
+                                    imagePath: eventController
+                                            .eventsAlreadyAttending
+                                            .value[index]
+                                            .imageUrl ??
+                                        dummyNoImage,
+                                    rating: 4,
+                                    title: eventController
+                                            .eventsAlreadyAttending
+                                            .value[index]
+                                            .title ??
+                                        "",
+                                    location: eventController
+                                            .eventsAlreadyAttending
+                                            .value[index]
+                                            .link ??
+                                        "",
+                                  ),
+                                );
+                              },
+                            )
+                          : Center(
+                              child: Text("No DATA"),
+                            ),
+                    ),
                   ),
                 ],
               ),
-              SizedBox(
-                height: h(context, 10),
-              ),
-              CustomText(
-                text: "Based in",
-                size: 13,
-                weight: FontWeight.w500,
-              ),
-              Obx(
-                () => CustomText(
-                  text: "${userModelGlobal.value.userLocation}",
-                  size: 13,
-                  weight: FontWeight.w400,
-                ),
-              ),
-              SizedBox(
-                height: h(context, 15),
-              ),
-              CustomText(
-                text: "Events you are attending",
-                size: 14,
-                weight: FontWeight.w500,
-              ),
-              SizedBox(
-                height: h(context, 5),
-              ),
-              Expanded(
-                child: Obx(
-                  () => eventController.eventsAttending.isNotEmpty
-                      ? ListView.builder(
-                          itemCount: eventController.eventsAttending.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-//                            final event = events[index];
-                            return Padding(
-                              padding: only(
-                                context,
-                                right: 13,
-                              ),
-                              child: CustomEventInfo(
-                                imagePath: eventController.eventsAttending
-                                        .value[index].imageUrl ??
-                                    dummyNoImage,
-                                rating: 4,
-                                title: eventController
-                                        .eventsAttending.value[index].title ??
-                                    "",
-                                location: eventController
-                                        .eventsAttending.value[index].link ??
-                                    "",
-                              ),
-                            );
-                          },
-                        )
-                      : Center(
-                          child: Text("No DATA"),
-                        ),
-                ),
-              ),
-              CustomText(
-                text: "Events you have attended previously",
-                size: 14,
-                weight: FontWeight.w500,
-              ),
-              SizedBox(
-                height: h(context, 5),
-              ),
-              Expanded(
-                child: Obx(
-                  () => eventController.eventsAlreadyAttending.isNotEmpty
-                      ? ListView.builder(
-                          itemCount:
-                              eventController.eventsAlreadyAttending.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-//                            final event = events[index];
-                            return Padding(
-                              padding: only(
-                                context,
-                                right: 13,
-                              ),
-                              child: CustomEventInfo(
-                                imagePath: eventController
-                                        .eventsAlreadyAttending
-                                        .value[index]
-                                        .imageUrl ??
-                                    dummyNoImage,
-                                rating: 4,
-                                title: eventController.eventsAlreadyAttending
-                                        .value[index].title ??
-                                    "",
-                                location: eventController.eventsAlreadyAttending
-                                        .value[index].link ??
-                                    "",
-                              ),
-                            );
-                          },
-                        )
-                      : Center(
-                          child: Text("No DATA"),
-                        ),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

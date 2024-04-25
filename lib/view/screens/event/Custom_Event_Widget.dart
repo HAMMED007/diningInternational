@@ -56,117 +56,135 @@ class CustomEvent extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Padding(
-          padding: symmetric(context, horizontal: 13),
-          child: Column(
-            children: [
-              SizedBox(height: h(context, 5)),
-              Row(
+        padding: all(context, 10),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: CustomText(
-                      text: '$title, $location',
-                      // text: '$title',
+                  Row(
+                    children: [
+                      CommonImageView(
+                        imagePath: Assets.imagesCalender,
+                        fit: BoxFit.contain,
+                        height: h(context, 17),
+                        width: w(context, 17),
+                      ),
+                      CustomText(text: date, paddingLeft: 6),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomText(
+                          text: '$title, $location',
+                          // text: '$title',
 
-                      size: 14,
-                      color: const Color(0xff573926),
-                    ),
+                          size: 14,
+                          color: const Color(0xff573926),
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(width: w(context, 25)),
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(profileImagePath),
-                    radius: 28,
+                  CustomDivider(),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CommonImageView(
+                        imagePath: Assets.imagesClock,
+                        fit: BoxFit.contain,
+                        height: h(context, 17),
+                        width: w(context, 17),
+                      ),
+                      CustomText(text: time, paddingLeft: 6),
+                    ],
                   ),
+                  SizedBox(height: h(context, 5)),
+                  Row(
+                    children: [
+                      CustomText(
+                        text: "Attendees : $attendees/$totalAttendees",
+                        weight: FontWeight.w500,
+                        size: 15,
+                      ),
+                      Image.asset(
+                        Assets.imagesShare,
+                        height: h(context, 18),
+                        width: w(context, 18),
+                      ),
+                    ],
+                  )
                 ],
               ),
-              CustomDivider(),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CommonImageView(
-                    imagePath: Assets.imagesCalender,
-                    fit: BoxFit.contain,
-                    height: h(context, 17),
-                    width: w(context, 17),
-                  ),
-                  CustomText(text: date, paddingLeft: 6),
-                  SizedBox(width: w(context, 34)),
-                  CommonImageView(
-                    imagePath: Assets.imagesClock,
-                    fit: BoxFit.contain,
-                    height: h(context, 17),
-                    width: w(context, 17),
-                  ),
-                  CustomText(text: time, paddingLeft: 6),
-                ],
-              ),
-              SizedBox(height: h(context, 5)),
-              Row(
-                children: [
-                  CustomText(
-                    text: "Attendees : $attendees/$totalAttendees",
-                    weight: FontWeight.w500,
-                  ),
-                  Image.asset(
-                    Assets.imagesShare,
-                    height: h(context, 18),
-                    width: w(context, 18),
-                  ),
-                  const Spacer(),
-                  if (hasregister)
-                    CustomButton2(
-                      firstText: "Edit your event",
-                      secText: "",
-                      height: 25,
-                      width: 160,
-                      onTap: () {
-                        eventController.eventModelToUpdate!.value =
-                            eventController.eventThread[index];
-                        Get.to(
-                          () => EditEvent(
-                            eventModel:
-                                eventController.eventThread.value[index],
-                          ),
-                        );
-                      },
+            ),
+            SizedBox(
+              width: w(context, 10),
+            ),
+            Column(
+              children: [
+                Container(
+                  width: w(context, 100),
+                  height: h(context, 80),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(h(context, 5)),
+                    image: DecorationImage(
+                      image: NetworkImage(profileImagePath),
+                      fit: BoxFit.cover,
                     ),
-                  if (!hasregister)
-                    CustomButton2(
-                      firstText: "Register for this event",
-                      secText: "",
-                      height: 25,
-                      width: 180,
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => ConfirmCustomDialog(
-                              title: eventController
-                                  .eventThread.value[index].title,
-                              imagePath: eventController
-                                  .eventThread.value[index].imageUrl,
-                              eventId: eventController
-                                  .eventThread.value[index].eventId,
-                              address:
-                                  eventController.eventThread.value[index].link,
-                              date:
-                                  eventController.eventThread.value[index].date,
-                              time:
-                                  eventController.eventThread.value[index].time,
-                              totalAttendees: eventController
-                                  .eventThread.value[index].attendeesTotal,
-                              comingAttendees:
-                                  "${eventController.eventThread.value[index].attendees?.length}",
-                              isDelete: false,
-                              message: "Confirm Attendance"),
-                        );
-//                        Get.to(() => EditEvent(eventModel: eventController.eventThread.value[index],));
-                      },
-                    ),
-                ],
-              )
-            ],
-          ),
+                  ),
+                ),
+                SizedBox(
+                  height: h(context, 10),
+                ),
+                if (hasregister)
+                  CustomButton2(
+                    firstText: "Edit event",
+                    secText: "",
+                    height: 25,
+                    width: 100,
+                    onTap: () {
+                      eventController.eventModelToUpdate!.value =
+                          eventController.eventThread[index];
+                      Get.to(
+                        () => EditEvent(
+                          eventModel: eventController.eventThread.value[index],
+                        ),
+                      );
+                    },
+                  ),
+                if (!hasregister)
+                  CustomButton2(
+                    firstText: "Register",
+                    secText: "",
+                    height: 25,
+                    width: 100,
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => ConfirmCustomDialog(
+                            title:
+                                eventController.eventThread.value[index].title,
+                            imagePath: eventController
+                                .eventThread.value[index].imageUrl,
+                            eventId: eventController
+                                .eventThread.value[index].eventId,
+                            address:
+                                eventController.eventThread.value[index].link,
+                            date: eventController.eventThread.value[index].date,
+                            time: eventController.eventThread.value[index].time,
+                            totalAttendees: eventController
+                                .eventThread.value[index].attendeesTotal,
+                            comingAttendees:
+                                "${eventController.eventThread.value[index].attendees?.length}",
+                            isDelete: false,
+                            message: "Confirm Attendance"),
+                      );
+                      //                        Get.to(() => EditEvent(eventModel: eventController.eventThread.value[index],));
+                    },
+                  ),
+              ],
+            )
+          ],
         ),
       ),
     );

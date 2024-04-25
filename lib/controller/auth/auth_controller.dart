@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gaa/core/globals/global_functions.dart';
 import 'package:gaa/core/utils/firebase_collections.dart';
@@ -48,6 +49,27 @@ class AuthController extends GetxController {
 
       // Send email verification
       await userCredential.user!.sendEmailVerification();
+
+      // Get the FCM token
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+
+      if (fcmToken != null) {
+        try {
+          // Reference to the Firestore document
+          DocumentReference documentRef = deviceIdsCollection.doc('deviceIds');
+
+          // Add the FCM token to the array field
+          await documentRef.update({
+            'ids': FieldValue.arrayUnion([fcmToken]),
+          });
+
+          print('FCM token added successfully.');
+        } catch (e) {
+          print('Error adding FCM token: $e');
+        }
+      } else {
+        print('FCM token is null.');
+      }
 
       // Create a new user object
       UserModel user = UserModel(
@@ -123,7 +145,7 @@ class AuthController extends GetxController {
         password: passwordLogInTextController.text,
       );
 
-      // Check if the user's email is verified
+      //Check if the user's email is verified
       if (!userCredential.user!.emailVerified) {
         showFailureSnackbar(
           title: "Email not verified",
@@ -131,6 +153,27 @@ class AuthController extends GetxController {
         );
         isLoading.value = false;
         return;
+      }
+
+      // Get the FCM token
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+
+      if (fcmToken != null) {
+        try {
+          // Reference to the Firestore document
+          DocumentReference documentRef = deviceIdsCollection.doc('deviceIds');
+
+          // Add the FCM token to the array field
+          await documentRef.update({
+            'ids': FieldValue.arrayUnion([fcmToken]),
+          });
+
+          print('FCM token added successfully.');
+        } catch (e) {
+          print('Error adding FCM token: $e');
+        }
+      } else {
+        print('FCM token is null.');
       }
 
       // Get the user ID from the authenticated user

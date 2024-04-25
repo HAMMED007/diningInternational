@@ -1,18 +1,13 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:gaa/core/globals/global_functions.dart';
 import 'package:gaa/core/globals/global_variables.dart';
 import 'package:gaa/models/event/event_model.dart';
 import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../../core/utils/firebase_collections.dart';
-import '../../view/screens/bottombar/bottombar.dart';
 
 class EventController extends GetxController {
   TextEditingController eventTitleTextController = TextEditingController();

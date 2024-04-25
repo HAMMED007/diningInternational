@@ -7,6 +7,8 @@ String PublishableKey =
 String SECRET_KEY =
     "sk_test_51NXIWZJnTKd7GIGTcK82ElRwj2P5Fct037oekkkyIAcds6lXAtAsls7B0HnmFLAhNoeI1G6L122HK3kvasoGiOe8008AnLPuaQ";
 
+String keyForNotificationApi = "AAAAvTuI1Hk:APA91bHE6BXcMXh34HwU4hVOh933Bv-2VXvBXC57ZfFHvfmsbt63Ymh7qJOHDTM-3ka8Qx5c3b3eubAOm-L_nH5BaOFbQcrJdQIxMmi12mVYKMWF3sl-2wo0EAnyu9OQuEXnCW8h1wG3";
+
 String dummyProfilePic =
     "https://www.cornwallbusinessawards.co.uk/wp-content/uploads/2017/11/dummy450x450.jpg";
 String dummyNoImage =

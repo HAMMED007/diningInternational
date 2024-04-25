@@ -57,6 +57,10 @@ class Assets {
   /// assets/images/fb.png
   static const String imagesFb = "assets/images/fb.png";
 
+  /// Assets for imagesFilter
+  /// assets/images/filter.png
+  static const String imagesFilter = "assets/images/filter.png";
+
   /// Assets for imagesGoogle
   /// assets/images/google.png
   static const String imagesGoogle = "assets/images/google.png";
