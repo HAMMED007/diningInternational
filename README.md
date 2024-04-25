@@ -5,10 +5,6 @@ places to eat, and meeting others who like food too.
 
 
 
-
-
-
-
 ## Getting Started
 This project is a starting point for developing the Dining International application 
 using the Flutter framework.
@@ -16,9 +12,9 @@ using the Flutter framework.
 ## Prerequisites
 Before you start, make sure you have the following installed:
 
-### Flutter SDK
-Android Studio or Visual Studio Code
-Firebase CLI
+- Flutter SDK
+- Android Studio or Visual Studio Code
+- Firebase CLI
 
 ### Features
 - Event Planning and Management: Organize your dining events and manage guest lists with ease.
@@ -36,7 +32,7 @@ Firebase CLI
 - Android Studio - The IDE used for app development.
 - Figma - For designing the user interface.
 
-Documentation
+### Documentation
 To understand the full capabilities of Flutter and Firebase, visit their official 
 documentation
 
