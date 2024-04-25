@@ -41,6 +41,7 @@ To understand the full capabilities of Flutter and Firebase, visit their officia
 documentation
 
 
-Authors
-Afenifere Hammed
+### Authors
+
+- Afenifere Hammed
 
